@@ -1,1 +1,1 @@
-# nexopay3-client-id
+# nx3-client-id
