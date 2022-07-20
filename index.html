@@ -63,15 +63,12 @@
             });
         });
         function myFunction() {
-          /* Get the text field */
-          var copyText = document.getElementById("clientQuery");
+           const span = document.getElementById('clientQuery');
 
-          /* Select the text field */
-          copyText.select();
-          copyText.setSelectionRange(0, 99999); /* For mobile devices */
+           const text1 = span.textContent;
 
           /* Copy the text inside the text field */
-          navigator.clipboard.writeText(copyText.value);
+          navigator.clipboard.writeText(text1);
         }
     </script>
 </head>
