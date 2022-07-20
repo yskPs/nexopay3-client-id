@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        code {
+            background-color: #eee;
+            border: 1px solid #999;
+            display: block;
+            padding: 20px;
+        }
+
+        input[type=text],
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .content {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        #hmacBtn {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #hmacBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#hmacBtn").click(function () {
+                let tenantId = $('#tenantId').val();
+                var clientId = tenantId.split(".")[0];
+                $('#clientId').text(clientId);
+                $('#domain').text(tenantId);
+                var clientSecretKey = CryptoJS.HmacSHA1(tenantId, clientId);
+                $('#clientSecretKey').text(clientSecretKey);
+
+                var query = "INSERT INTO `mst_embed_client` (`id`, `school_id`, `client_id`, `client_secret`, `api_key`, `active_status`, `created_on`, `created_by`, `modified_on`, `modified_by`)" +
+                    "VALUES('1','1','" + clientId + "','" + clientSecretKey + "',NULL,'1',now(),'1',NULL,NULL);"
+                var embedSchoolConfigQuery = " INSERT INTO `mst_embed_school_config` (`id`, `school_id`, `expiry_minuites`, `show_side_menu`, `show_header`, `student_switch`, `show_invoice_list`, `show_promotion_page_two`, `show_promotion_page_how_zenda_works`, `promotion_page_zenda_video_url`, `promotion_page_zenda_video_poster_url`, `promotion_page_paynow_click_web`, `promotion_page_paynow_click_mobile`, `show_promotion_page_pay_in_installment_button`, `show_promotion_page`, `show_pending_dues_for_other_students`, `promotion_page_reward_amount`, `enable_automatic_redirection`, `single_time_url_checkout_usage`, `redirection_wait_time_in_seconds`, `enable_app_download`, `promotion_page_download_url`, `deep_link_url`, `created_on`, `created_by`) " +
+                    + "VALUES('1','1','527040','','','','','1','0','/nexquare/resources/zenda_promotion_video.mp4','/nexquare/resources/zenda_promotion_video_poster_image.png','nexopay3','nexopay3',NULL,NULL,'','6000.00',1,'','5','','https://app.zenda.com/getstarted','https://app-link.nexquare.io/open',now(),'1');";
+                $('#clientQuery').text(query);
+                $('#embedSchoolConfigQuery').text(embedSchoolConfigQuery);
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <div class="content">
+        <div class="form-tenant">
+            <form action="">
+                Enter tenantId/Domain <input type="text" name="tenantId" id="tenantId" value=""><br>
+            </form>
+        </div>
+        <p>#Nexopay3-v1.0</p>
+        <button id="hmacBtn">Generate Keys</button>
+        <p>tenantId - : <code><span id="domain"></span></code></p>
+        <p>ClientId - : <code><span id="clientId"></span></code></p>
+        <p>Client Secret - : <code><span id="clientSecretKey"></span></code></p>
+        <p>Client Query - : <code><span id="clientQuery"></span></code></p>
+        <p>SchoolConfig Query - : <code><span id="embedSchoolConfigQuery"></span></code></p>
+    </div>
+</body>
+
+</html>
